@@ -29,9 +29,9 @@ const StructurePanel: FC<StructurePanelProps> = ({
   onAddFeature,
 }) => {
   const processedTree = useMemo<DataNode[]>(() => {
-    const decorateNode = (node: ExtendedDataNode): ExtendedDataNode => {
-      const type = resolveNodeType(String(node.key))
-      let actions: ReactNode[] = []
+    const decorateNode = (node: ExtendedDataNode): DataNode => {
+      const type = resolveNodeType(String(node.key));
+      let actions: ReactNode[] = [];
       if (type === 'plan') {
         actions = [
           <Button
@@ -60,7 +60,12 @@ const StructurePanel: FC<StructurePanelProps> = ({
         ]
       }
 
-      const resolvedTitle = typeof node.title === 'function' ? node.title(node) : node.title
+      // Fix for type error: ensure node argument matches DataNode type, not ExtendedDataNode
+      const resolvedTitle =
+        typeof node.title === 'function'
+          // Cast node to DataNode for the title function
+          ? node.title(node as unknown as DataNode)
+          : node.title
       const title = (
         <div className="flex items-center justify-between gap-2 pr-1">
           <div className="flex items-center gap-2">
