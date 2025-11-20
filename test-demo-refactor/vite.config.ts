@@ -2,11 +2,8 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'node:path'
 
-const repositoryName = process.env.GITHUB_REPOSITORY?.split('/')[1]
-const base =
-  process.env.GITHUB_PAGES === 'true' && repositoryName
-    ? `/${repositoryName}/`
-    : '/'
+const repoBasePath = '/test-demo-react/'
+const base = process.env.NODE_ENV === 'production' ? repoBasePath : '/'
 
 export default defineConfig({
   base,

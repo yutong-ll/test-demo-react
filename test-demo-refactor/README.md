@@ -2,6 +2,16 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+## GitHub Pages deployment
+
+The Vite config is pre-set with `base = '/test-demo-react/'` for production builds so assets resolve correctly on `https://yutong-ll.github.io/test-demo-react/`.
+
+1. Install deps once: `npm install`
+2. Build & publish: `npm run deploy`
+   - Runs `npm run build` to emit `dist/`
+   - Pushes `dist/` to the `gh-pages` branch via `gh-pages`
+3. In the GitHub repo settings, point Pages to the `gh-pages` branch (root). Enforce HTTPS for the default domain.
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
