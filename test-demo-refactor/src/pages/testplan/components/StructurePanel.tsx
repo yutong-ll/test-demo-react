@@ -30,8 +30,8 @@ const StructurePanel: FC<StructurePanelProps> = ({
 }) => {
   const processedTree = useMemo<DataNode[]>(() => {
     const decorateNode = (node: ExtendedDataNode): DataNode => {
-      const type = resolveNodeType(String(node.key));
-      let actions: ReactNode[] = [];
+      const type = resolveNodeType(String(node.key))
+      let actions: ReactNode[] = []
       if (type === 'plan') {
         actions = [
           <Button
@@ -85,11 +85,14 @@ const StructurePanel: FC<StructurePanelProps> = ({
         </div>
       )
 
+      const childNodes: DataNode[] = (node.children ?? []).map((child) => decorateNode(child))
+      const { children: _ignored, ...rest } = node
+
       return {
-        ...node,
+        ...rest,
         title,
-        children: node.children?.map((child) => decorateNode(child)) || [],
-      }
+        children: childNodes,
+      } satisfies DataNode
     }
 
     return data.map((node) => decorateNode(node))
