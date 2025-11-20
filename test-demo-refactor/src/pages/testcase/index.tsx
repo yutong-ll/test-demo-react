@@ -2,7 +2,15 @@ import { useMemo, useState } from 'react'
 import type { Key } from 'react'
 import { Button, Card, Form, Input, Modal, Popconfirm, Space, Table, Tag, Tooltip, message } from 'antd'
 import type { ColumnsType, ColumnType } from 'antd/es/table'
-import type { TestCaseRecord, AdvancedFilters, CaseFormValues, AutomationRun, BatchEditValues } from './interface'
+import type {
+  TestCaseRecord,
+  AdvancedFilters,
+  CaseFormValues,
+  AutomationRun,
+  BatchEditValues,
+  TagItem,
+  CaseMode,
+} from './interface'
 import {
   availableTags,
   componentOptions,
@@ -31,7 +39,7 @@ import { EditOutlined, DeleteOutlined, EyeOutlined, FilterOutlined } from '@ant-
 
 const ownerOptions = ownerList.map((owner) => ({ label: owner, value: owner }))
 const tagOptions = availableTags.map((tag) => ({ label: tag.name, value: tag.name }))
-const modeOptions = [
+const modeOptions: { label: string; value: CaseMode }[] = [
   { label: 'Auto', value: 'auto' },
   { label: 'Manual', value: 'manual' },
 ]
@@ -43,7 +51,7 @@ const initialFilters: AdvancedFilters = {
   owner: [],
 }
 
-const buildTagItems = (tags: string[]) =>
+const buildTagItems = (tags: string[]): TagItem[] =>
   tags.map((tag) => {
     const hit = availableTags.find((item) => item.name === tag)
     return hit ?? { id: tag, name: tag, color: 'blue' }
@@ -124,10 +132,10 @@ const TestCasePage: React.FC = () => {
         id: `TC-${1000 + dataSource.length + 1}`,
         name: values.name,
         tags: buildTagItems(values.tags || []),
-        project: values.project,
-        component: values.component,
+        project: values.project ?? '',
+        component: values.component ?? '',
         feature: values.feature,
-        owner: values.owner,
+        owner: values.owner ?? '',
         type: values.isAutomated ? 'auto' : 'manual',
         priority: values.priority,
         testType: values.testType,
@@ -177,17 +185,26 @@ const TestCasePage: React.FC = () => {
     try {
       const values = await editForm.validateFields()
       setDataSource((prev) =>
-        prev.map((item) =>
-          item.key === editingKey
-            ? {
-              ...item,
-              ...values,
-              type: values.isAutomated ? 'auto' : 'manual',
-              tags: buildTagItems(values.tags || []),
-              updatedAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-            }
-            : item,
-        ),
+        prev.map((item) => {
+          if (item.key !== editingKey) return item
+          return {
+            ...item,
+            name: values.name,
+            project: values.project ?? item.project,
+            component: values.component ?? item.component,
+            feature: values.feature ?? item.feature,
+            owner: values.owner ?? item.owner,
+            priority: values.priority,
+            testType: values.testType,
+            description: values.description ?? item.description,
+            steps: values.steps,
+            expectedResult: values.expectedResult,
+            isRegression: values.isRegression,
+            type: values.isAutomated ? 'auto' : 'manual',
+            tags: buildTagItems(values.tags || []),
+            updatedAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+          }
+        }),
       )
       setIsEditModalOpen(false)
       setEditingKey(null)
@@ -234,15 +251,21 @@ const TestCasePage: React.FC = () => {
       }
 
       setDataSource((prev) =>
-        prev.map((item) =>
-          selectedRowKeys.includes(item.key)
+        prev.map((item) => {
+          if (!selectedRowKeys.includes(item.key)) return item
+          const updatedFields: Partial<TestCaseRecord> = {}
+          if (values.owner) updatedFields.owner = values.owner
+          if (values.priority) updatedFields.priority = values.priority
+          if (values.component) updatedFields.component = values.component
+          if (values.testType) updatedFields.testType = values.testType
+          return Object.keys(updatedFields).length
             ? {
               ...item,
-              ...values,
+              ...updatedFields,
               updatedAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
             }
-            : item,
-        ),
+            : item
+        }),
       )
       setIsBatchEditModalOpen(false)
       setSelectedRowKeys([])
@@ -317,12 +340,12 @@ const TestCasePage: React.FC = () => {
       key: 'tags',
       width: 140,
       ...getColumnSearchProps('tags', 'Tags'),
-      render: (tags) => {
+      render: (tags: TagItem[]) => {
         if (!tags?.length) return <span className="text-gray-400">-</span>
         const [first, ...rest] = tags
         const tooltipContent = (
           <div className="flex flex-col gap-1">
-            {rest.map((tag) => (
+            {rest.map((tag: TagItem) => (
               <Tag key={tag.id} color={tag.color}>
                 {tag.name}
               </Tag>

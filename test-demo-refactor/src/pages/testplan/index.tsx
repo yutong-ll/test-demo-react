@@ -39,9 +39,15 @@ interface SelectedNodeInfo {
 const resolveNodeType = (key: string): PlanNodeType =>
   key.includes('plan') ? 'plan' : key.includes('comp') ? 'component' : 'feature'
 
+const normalizeNodeTitle = (node: ExtendedDataNode): string => {
+  const rawTitle = typeof node.title === 'function' ? node.title(node) : node.title
+  if (typeof rawTitle === 'string') return rawTitle
+  return rawTitle ? String(rawTitle) : ''
+}
+
 const findNodeInfo = (nodes: ExtendedDataNode[], key: string, trail: string[] = []): SelectedNodeInfo => {
   for (const node of nodes) {
-    const currentPath = [...trail, node.title as string]
+    const currentPath = [...trail, normalizeNodeTitle(node)]
     const type = resolveNodeType(String(node.key))
     if (node.key === key) {
       return { node, type, path: currentPath }
@@ -115,14 +121,14 @@ const TestPlanPage: React.FC = () => {
     const toggledValue = !(selectedNode[field] ?? false)
     const updates: Partial<ExtendedDataNode> =
       field === 'isCritical'
-        ? { isCritical: toggledValue, isDone: toggledValue ? false : selectedNode.isDone }
-        : { isDone: toggledValue, isCritical: toggledValue ? false : selectedNode.isCritical }
+        ? { isCritical: toggledValue, isDone: toggledValue ? false : selectedNode.isDone ?? false }
+        : { isDone: toggledValue, isCritical: toggledValue ? false : selectedNode.isCritical ?? false }
     setPlanHierarchy((prev) => updateTreeNode(prev, selectedNode.key as string, updates))
   }
 
   const handleLinkCasesOk = () => {
     const casesToAdd = repositoryCases.filter((item) => selectedCasesToLink.includes(item.key))
-    const mapped = casesToAdd.map((item) => ({
+    const mapped: PlanCase[] = casesToAdd.map((item) => ({
       ...item,
       key: `linked-${Date.now()}-${item.key}`,
       planId: selectedType === 'plan' ? selectedKey : undefined,
@@ -170,7 +176,8 @@ const TestPlanPage: React.FC = () => {
             const nextChildren = [...(node.children || []), { title: values.component, key: `comp-${Date.now()}`, children: [] }]
             return { ...node, children: nextChildren }
           }
-          return { ...node, children: node.children ? update(node.children) : node.children }
+          const updatedChildren = node.children ? update(node.children) : undefined
+          return updatedChildren ? { ...node, children: updatedChildren } : { ...node, children: updatedChildren }
         })
       setPlanHierarchy((prev) => update(prev))
       setAddComponentModalOpen(false)
@@ -190,7 +197,8 @@ const TestPlanPage: React.FC = () => {
             ]
             return { ...node, children: nextChildren }
           }
-          return { ...node, children: node.children ? update(node.children) : node.children }
+          const updatedChildren = node.children ? update(node.children) : undefined
+          return updatedChildren ? { ...node, children: updatedChildren } : { ...node, children: updatedChildren }
         })
       setPlanHierarchy((prev) => update(prev))
       setAddFeatureModalOpen(false)

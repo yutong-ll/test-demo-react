@@ -5,7 +5,7 @@ import { testCasePageClasses } from '../style'
 
 interface TableToolbarProps {
   total: number
-  filterLabel?: string
+  filterLabel?: string | undefined
   onClearFilter: () => void
   onOpenFilters: () => void
   onCreate: () => void

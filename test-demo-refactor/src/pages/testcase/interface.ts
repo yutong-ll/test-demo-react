@@ -25,18 +25,18 @@ export interface TestCaseRecord {
   tags: TagItem[]
   project: string
   component: string
-  feature?: string
+  feature?: string | undefined
   owner: string
   type: CaseMode
   priority: CasePriority
   testType: TestLevel
-  description?: string
+  description?: string | undefined
   steps: string
   expectedResult: string
   isRegression: boolean
   createdAt: string
   updatedAt: string
-  lastRun?: AutomationRun
+  lastRun?: AutomationRun | undefined
 }
 
 export interface AdvancedFilters {
@@ -59,22 +59,22 @@ export type LibraryTreeNode = DataNode
 export interface CaseFormValues {
   name: string
   tags: string[]
-  project: string
-  component: string
-  feature: string
-  owner: string
+  project?: string | undefined
+  component?: string | undefined
+  feature?: string | undefined
+  owner?: string | undefined
   isAutomated: boolean
   priority: CasePriority
   testType: TestLevel
-  description?: string
+  description?: string | undefined
   steps: string
   expectedResult: string
   isRegression: boolean
 }
 
 export interface BatchEditValues {
-  owner?: string
-  priority?: CasePriority
-  component?: string
-  testType?: TestLevel
+  owner?: string | undefined
+  priority?: CasePriority | undefined
+  component?: string | undefined
+  testType?: TestLevel | undefined
 }

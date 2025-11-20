@@ -1,5 +1,5 @@
 import { Timeline } from 'antd'
-import { TestPlan } from '@/types/testplan'
+import type { TestPlan } from '@/types/testplan'
 
 interface MilestoneListProps {
   plan: TestPlan

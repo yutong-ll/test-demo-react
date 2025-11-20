@@ -3,10 +3,10 @@ import type { DataNode } from 'antd/es/tree'
 export type PlanNodeType = 'plan' | 'component' | 'feature'
 
 export interface ExtendedDataNode extends DataNode {
-  isCritical?: boolean
-  isDone?: boolean
-  description?: string
-  children?: ExtendedDataNode[]
+  isCritical?: boolean | undefined
+  isDone?: boolean | undefined
+  description?: string | undefined
+  children?: ExtendedDataNode[] | undefined
 }
 
 export type TestCaseStatus = 'Passed' | 'Failed' | 'Blocked' | 'Not Run'
@@ -19,9 +19,9 @@ export interface PlanCase {
   key: string
   id: string
   title: string
-  planId?: string
-  componentId?: string
-  featureId?: string
+  planId?: string | undefined
+  componentId?: string | undefined
+  featureId?: string | undefined
   type: TestCaseType
   status: TestCaseStatus
   priority: TestCasePriority
@@ -45,7 +45,7 @@ export type FeatureToggleField = 'isCritical' | 'isDone'
 
 export interface CreatePlanFormValues {
   planName: string
-  description?: string
+  description?: string | undefined
 }
 
 export interface AddComponentFormValues {
@@ -58,5 +58,5 @@ export interface AddFeatureFormValues {
 
 export interface EvaluateFormValues {
   stars: number
-  comment?: string
+  comment?: string | undefined
 }

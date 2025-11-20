@@ -51,10 +51,11 @@ const PlanSummaryCard: FC<PlanSummaryCardProps> = ({
 
   const pathText = hierarchyPath.join(' › ')
   const typeConfig = typeTagConfig[nodeType]
+  const resolvedTitle = typeof node.title === 'function' ? node.title(node as any) : node.title
 
   const statItems = [
-    { label: 'Total Cases', value: stats ? stats.total : '—' },
-    { label: 'Automation', value: stats ? stats.autoCount : '—' },
+    { label: 'Total Cases', value: stats?.total ?? '—' },
+    { label: 'Automation', value: stats?.autoCount ?? '—' },
     { label: 'Pass Rate', value: stats ? `${stats.passRate}%` : '—' },
     { label: 'Sub Items', value: stats ? stats.subItemCount : '—' },
   ]
@@ -66,7 +67,7 @@ const PlanSummaryCard: FC<PlanSummaryCardProps> = ({
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <Typography.Title level={4} className="!mb-0">
-                {node.title}
+                {resolvedTitle}
               </Typography.Title>
               <Tag color={typeConfig.color} bordered={false}>
                 {typeConfig.label}
@@ -74,7 +75,7 @@ const PlanSummaryCard: FC<PlanSummaryCardProps> = ({
             </div>
             {nodeType === 'feature' && (
               <Space>
-                <Button type={node.isCritical ? 'primary' : 'default'} danger={node.isCritical} onClick={onToggleCritical}>
+                <Button type={node.isCritical ? 'primary' : 'default'} danger={Boolean(node.isCritical)} onClick={onToggleCritical}>
                   {node.isCritical ? 'Mark Non-critical' : 'Mark Critical'}
                 </Button>
                 <Button type={node.isDone ? 'primary' : 'default'} onClick={onToggleDone}>

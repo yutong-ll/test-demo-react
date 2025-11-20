@@ -60,10 +60,11 @@ const StructurePanel: FC<StructurePanelProps> = ({
         ]
       }
 
+      const resolvedTitle = typeof node.title === 'function' ? node.title(node) : node.title
       const title = (
         <div className="flex items-center justify-between gap-2 pr-1">
           <div className="flex items-center gap-2">
-            <span>{node.title}</span>
+            <span>{resolvedTitle}</span>
             {type === 'feature' && node.isCritical && (
               <Tag color="red" bordered={false} className="text-[10px] leading-4">
                 Critical

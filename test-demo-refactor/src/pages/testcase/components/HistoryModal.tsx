@@ -6,7 +6,7 @@ import type { AutomationRun } from '../interface'
 
 interface HistoryModalProps {
   open: boolean
-  caseId?: string
+  caseId?: string | undefined
   dataSource: AutomationRun[]
   onClose: () => void
 }
