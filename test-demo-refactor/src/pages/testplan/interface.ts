@@ -2,12 +2,13 @@ import type { DataNode } from 'antd/es/tree'
 
 export type PlanNodeType = 'plan' | 'component' | 'feature'
 
-export interface ExtendedDataNode extends DataNode {
-  isCritical?: boolean | undefined
-  isDone?: boolean | undefined
-  description?: string | undefined
-  children?: ExtendedDataNode[] | undefined
+export interface ExtendedDataNode extends Omit<DataNode, 'children'> {
+  isCritical?: boolean
+  isDone?: boolean
+  description?: string
+  children?: ExtendedDataNode[]
 }
+
 
 export type TestCaseStatus = 'Passed' | 'Failed' | 'Blocked' | 'Not Run'
 
