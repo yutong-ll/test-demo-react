@@ -1,4 +1,4 @@
-import { TestCase } from './testcase'
+import type { TestCase } from './testcase'
 
 export interface TestPlanMilestone {
   id: string

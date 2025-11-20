@@ -2,20 +2,20 @@ import type { FC } from 'react'
 import { Checkbox, Divider, Form, Input, Row, Col, Select, Space } from 'antd'
 import { BugOutlined, ThunderboltOutlined } from '@ant-design/icons'
 import type { FormInstance } from 'antd/es/form'
+import type { DefaultOptionType } from 'antd/es/select'
 import type { CaseFormValues } from '../interface'
-import type { SelectProps } from 'antd'
 
 const { TextArea } = Input
 
 interface CaseFormProps {
   form: FormInstance<CaseFormValues>
-  tagOptions: SelectProps['options']
-  projectOptions: SelectProps['options']
-  componentOptions: SelectProps['options']
-  featureOptions: SelectProps['options']
-  ownerOptions: SelectProps['options']
-  priorityOptions: SelectProps['options']
-  testTypeOptions: SelectProps['options']
+  tagOptions: DefaultOptionType[]
+  projectOptions: DefaultOptionType[]
+  componentOptions: DefaultOptionType[]
+  featureOptions: DefaultOptionType[]
+  ownerOptions: DefaultOptionType[]
+  priorityOptions: DefaultOptionType[]
+  testTypeOptions: DefaultOptionType[]
 }
 
 const CaseForm: FC<CaseFormProps> = ({

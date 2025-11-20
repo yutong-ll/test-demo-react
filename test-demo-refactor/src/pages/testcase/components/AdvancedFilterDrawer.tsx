@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 import { Button, Drawer, Select } from 'antd'
-import type { SelectProps } from 'antd'
+import type { DefaultOptionType } from 'antd/es/select'
 import type { AdvancedFilters, CaseMode, CasePriority, TestLevel } from '../interface'
 import { testCasePageClasses } from '../style'
 
@@ -10,10 +10,10 @@ interface AdvancedFilterDrawerProps {
   onClose: () => void
   onReset: () => void
   onChange: <K extends keyof AdvancedFilters>(key: K, values: AdvancedFilters[K]) => void
-  priorityOptions: SelectProps['options']
-  testTypeOptions: SelectProps['options']
+  priorityOptions: DefaultOptionType[]
+  testTypeOptions: DefaultOptionType[]
   modeOptions: { label: string; value: CaseMode }[]
-  ownerOptions: SelectProps['options']
+  ownerOptions: DefaultOptionType[]
   resultCount: number
 }
 
@@ -47,7 +47,7 @@ const AdvancedFilterDrawer: FC<AdvancedFilterDrawerProps> = ({
         mode="multiple"
         placeholder="Select Priority"
         allowClear
-        options={priorityOptions as SelectProps['options']}
+        options={priorityOptions}
         value={filters.priority}
         onChange={(values) => onChange('priority', values as CasePriority[])}
       />
@@ -58,7 +58,7 @@ const AdvancedFilterDrawer: FC<AdvancedFilterDrawerProps> = ({
         mode="multiple"
         placeholder="Select Type"
         allowClear
-        options={testTypeOptions as SelectProps['options']}
+        options={testTypeOptions}
         value={filters.testType}
         onChange={(values) => onChange('testType', values as TestLevel[])}
       />

@@ -1,8 +1,8 @@
 import type { FC } from 'react'
 import { Alert, Form, Modal, Select } from 'antd'
 import type { FormInstance } from 'antd/es/form'
+import type { DefaultOptionType } from 'antd/es/select'
 import type { BatchEditValues } from '../interface'
-import type { SelectProps } from 'antd'
 
 interface BatchEditModalProps {
   open: boolean
@@ -10,10 +10,10 @@ interface BatchEditModalProps {
   onSubmit: () => void
   onCancel: () => void
   targetCount: number
-  ownerOptions: SelectProps['options']
-  priorityOptions: SelectProps['options']
-  componentOptions: SelectProps['options']
-  testTypeOptions: SelectProps['options']
+  ownerOptions: DefaultOptionType[]
+  priorityOptions: DefaultOptionType[]
+  componentOptions: DefaultOptionType[]
+  testTypeOptions: DefaultOptionType[]
 }
 
 const BatchEditModal: FC<BatchEditModalProps> = ({

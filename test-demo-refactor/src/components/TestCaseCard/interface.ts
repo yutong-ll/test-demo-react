@@ -1,4 +1,4 @@
-import { TestCase } from '@/types/testcase'
+import type { TestCase } from '@/types/testcase'
 
 export interface TestCaseCardProps {
   data: TestCase
