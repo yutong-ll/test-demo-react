@@ -40,10 +40,19 @@ const resolveNodeType = (key: string): PlanNodeType =>
   key.includes('plan') ? 'plan' : key.includes('comp') ? 'component' : 'feature'
 
 const normalizeNodeTitle = (node: ExtendedDataNode): string => {
-  const rawTitle = typeof node.title === 'function' ? node.title(node) : node.title
-  if (typeof rawTitle === 'string') return rawTitle
-  return rawTitle ? String(rawTitle) : ''
+  let rawTitle: React.ReactNode;
+  if (typeof node.title === "function") {
+    // Only pass partial node type, since `title` expects DataNode, not ExtendedDataNode
+    // Fallback: cast to any to bypass type issue, as upstream code assumes this works
+    // Alternatively, extract just the title-relevant properties if known
+    rawTitle = (node.title as (data: any) => React.ReactNode)(node);
+  } else {
+    rawTitle = node.title;
+  }
+  if (typeof rawTitle === "string") return rawTitle;
+  return rawTitle ? String(rawTitle) : "";
 }
+
 
 const findNodeInfo = (nodes: ExtendedDataNode[], key: string, trail: string[] = []): SelectedNodeInfo => {
   for (const node of nodes) {
